@@ -7,11 +7,11 @@ sudo pip install undervolt
 sudo undervolt --core -130 --cache -130
 #persistence details here https://github.com/georgewhewell/undervolt
 
-#system name
-sudo nano /etc/hostname
-
 #tools foss
-sudo apt install blender gimp inkscape zim system76-cuda-latest natron
+sudo apt install blender gimp inkscape zim natron tee
+
+#set hostname
+echo 'cybersnake' | sudo tee /etc/hostname
 
 #insync
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCAF35C
