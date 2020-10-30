@@ -1,33 +1,15 @@
 #!/bin/sh
 
 #@todo switch touchpad to natural scrolling
-$do_undervolt = 1
 
 #undervolt
 sudo apt update
-sudo apt install python3-pip
+sudo apt -y install python3-pip
 sudo pip install undervolt
 sudo undervolt --core -130 --cache -130
 echo 'Undervolt installed. Setting up persistence'
 #persistence details from here https://github.com/georgewhewell/undervolt
-echo '[Unit]
-Description=undervolt
-After=suspend.target
-After=hibernate.target
-After=hybrid-sleep.target
-
-[Service]
-Type=oneshot
-# If you have installed undervolt globally (via sudo pip install):
-ExecStart=/usr/local/bin/undervolt -v --core -130 --cache -130
-# If you want to run from source:
-# ExecStart=/path/to/undervolt.py -v --core -150 --cache -150 --gpu -100
-
-[Install]
-WantedBy=multi-user.target
-WantedBy=suspend.target
-WantedBy=hibernate.target
-WantedBy=hybrid-sleep.target' | sudo tee /etc/systemd/system/undervolt.service
+sudo cp undervolt.service /etc/systemd/system/undervolt.service
 systemctl start undervolt
 systemctl enable undervolt
 
@@ -35,7 +17,7 @@ systemctl enable undervolt
 
 #tools foss
 echo '### Installing the main FOSS tools ###'
-sudo apt install blender gimp inkscape zim natron tee code timeshift
+sudo apt -y install blender gimp inkscape zim natron code timeshift
 
 #set hostname
 echo -n 'What should be the hostname?'
@@ -46,7 +28,7 @@ echo $new_hostname | sudo tee /etc/hostname
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCAF35C
 echo 'deb http://apt.insync.io/ubuntu groovy non-free contrib' | sudo tee /etc/apt/sources.list.d/insync.list
 sudo apt update
-sudo apt install insync
+sudo apt -y install insync
 
 #cuda
 echo '### Installing CUDA ###'
@@ -57,6 +39,7 @@ sudo dpkg -i cuda-repo-ubuntu2004-11-1-local_11.1.1-455.32.00-1_amd64.deb
 sudo apt-key add /var/cuda-repo-ubuntu2004-11-1-local/7fa2af80.pub
 sudo apt-get update
 sudo apt-get -y install cuda
+rm cuda-repo-ubuntu2004-11-1-local_11.1.1-455.32.00-1_amd64.deb
 echo '### CUDA Installation done! ###'
 
 #houdini
@@ -74,7 +57,6 @@ ogdir=$(pwd)
 sidefx_url="https://www.sidefx.com"
 login_page="${sidefx_url}/login/"
 download_page="${sidefx_url}/download/houdini-for-linux/get/"
-rsversion_download_page="${sidefx_url}/download/download-houdini/63948/"
 
 # get csrf token and csrf cookie:
 echo "getting middleware token..."
@@ -90,7 +72,6 @@ echo "HOUDINI: Downloading the latest version"
 curl -b cookies -c cookies -O -J -L $download_page
 #untar and install
 newdir=$(tar -v -zxf houdini* | sed -e 's@/.*@@' | uniq)
-echo $newdir | tee result
 cd "$newdir"
 sudo ./houdini.install
 cd ..
@@ -101,24 +82,6 @@ rm houdini*
 cd /opt/hfs18.5
 . houdini_setup
 cd "$ogdir"
-
-echo "HOUDINI: Downloading the RS compatible version"
-curl -b cookies -c cookies -O -J -L $rsversion_download_page
-tar -xvf houdini*
-rm houdini*
-#untar and install
-newdir=$(tar -v -zxf houdini* | sed -e 's@/.*@@' | uniq)
-echo $newdir | tee result
-cd "$newdir"
-sudo ./houdini.install
-cd ..
-rm -rf "$newdir"
-rm houdini*
-#source
-cd /opt/hfs18.5
-. houdini_setup
-cd "$ogdir"
-echo "HOUDINI: Don't forget to run source houdini in /opt/ !!!"
 # curl clean up
 rm cookies
 #SideFX licensing
@@ -134,7 +97,7 @@ git_name="sioppz"
 git_email="alfred.tsaizer@gmail.com"
 git_user="sioppz"
 
-sudo apt install git xclip
+sudo apt -y install git xclip
 git config --global user.name $git_name
 git config --global user.email  $git_email
 git config --global user.name $git_user
@@ -144,3 +107,12 @@ git config --global core.editor code
 ssh-keygen -t rsa -C $git_email
 cat ~/.ssh/id_rsa.pub | xclip -sel clip
 firefox https://github.com/settings/ssh/new
+
+#installing snap and snap blender
+echo 'Installing Snapd and official Blender'
+sudo apt update
+sudo apt -y install snapd
+sudo snap install hello-world
+hello-world
+snap install blender --classic
+sudo snap install whatsdesk
