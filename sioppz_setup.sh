@@ -17,7 +17,7 @@ systemctl enable undervolt
 
 #tools foss
 echo '### Installing the main FOSS tools ###'
-sudo apt -y install blender gimp inkscape zim natron code timeshift
+sudo apt -y install blender gimp inkscape zim natron code timeshift nvtop
 
 #set hostname
 echo -n 'What should be the hostname?'
@@ -116,3 +116,5 @@ sudo snap install hello-world
 hello-world
 snap install blender --classic
 sudo snap install whatsdesk
+sudo snap install mailspring
+flatpak -y install flathub com.github.alainm23.planner
