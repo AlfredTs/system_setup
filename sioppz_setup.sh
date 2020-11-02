@@ -17,7 +17,7 @@ systemctl enable undervolt
 
 #tools foss
 echo '### Installing the main FOSS tools ###'
-sudo apt -y install blender gimp inkscape zim natron code timeshift nvtop
+sudo apt -y install blender gimp inkscape zim natron code timeshift nvtop htop
 
 #set hostname
 echo -n 'What should be the hostname?'
